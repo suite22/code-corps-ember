@@ -1,10 +1,9 @@
 import { moduleForModel, test } from 'ember-qunit';
 import { testForBelongsTo, testForHasMany } from '../../helpers/relationship';
-import '../../helpers/has-attributes';
+import { testForAttributes } from 'code-corps-ember/tests/helpers/attributes';
 import Ember from 'ember';
 
 const {
-  get,
   run
 } = Ember;
 
@@ -16,6 +15,7 @@ moduleForModel('project', 'Unit | Model | project', {
     'model:organization-membership',
     'model:project-category',
     'model:project-skill',
+    'model:stripe-plan',
     'model:task',
     'model:user'
   ]
@@ -26,27 +26,14 @@ test('it exists', function(assert) {
   assert.ok(!!model);
 });
 
-test('it should have all of its attributes', function(assert) {
-  let model = this.store().modelFor('project');
-  let actualAttributes = get(model, 'attributes');
-
-  let expectedAttributes = [
-    'base64IconData',
-    'closedTasksCount',
-    'description',
-    'iconLargeUrl',
-    'iconThumbUrl',
-    'longDescriptionBody',
-    'longDescriptionMarkdown',
-    'openTasksCount',
-    'slug',
-    'title'
-  ];
-
-  assert.hasAttributes(actualAttributes, expectedAttributes);
-});
+testForAttributes('project', [
+  'base64IconData', 'closedTasksCount', 'description', 'iconLargeUrl', 'iconThumbUrl',
+  'longDescriptionBody', 'longDescriptionMarkdown', 'openTasksCount', 'slug', 'title'
+]);
 
 testForBelongsTo('project', 'organization');
+testForBelongsTo('project', 'stripePlan');
+
 testForHasMany('project', 'tasks');
 testForHasMany('project', 'projectCategories');
 testForHasMany('project', 'projectSkills');

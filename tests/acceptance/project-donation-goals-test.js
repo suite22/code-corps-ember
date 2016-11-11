@@ -179,3 +179,25 @@ test('cancelling edit of an unsaved existing goal keeps that goal in the list', 
     assert.equal(projectDonationGoalsPage.donationGoals().count, 1, 'Existing goal is still rendered.');
   });
 });
+
+test('it allows activating donations for the project', function(assert) {
+  assert.expect(2);
+
+  let project = createProjectWithSluggedRoute();
+  let { organization } = project;
+  server.createList('donation-goal', 1, { project });
+
+  authenticateAsMemberOfRole(this.application, server, organization, 'owner');
+
+  projectDonationGoalsPage.visit({ organization: organization.slug, project: project.slug });
+
+  andThen(() => {
+    projectDonationGoalsPage.clickActivateDonationGoals();
+  });
+
+  andThen(() => {
+    assert.equal(server.schema.stripePlans.all().models.length, 1, 'A single plan was created.');
+    let plan = server.schema.stripePlans.first();
+    assert.equal(plan.projectId, project.id, 'Project was correctly assigned to created plan.');
+  });
+});
