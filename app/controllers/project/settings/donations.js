@@ -17,6 +17,10 @@ export default Controller.extend({
       project.get('donationGoals').createRecord().set('isEditing', true);
     },
 
+    activateDonations(project) {
+      console.log('activating donations', project);
+    },
+
     /**
      * Action which switches a donation goal from edit to view mode
      * If the donation goal is a new, unsaved record, it will be destroyed.
